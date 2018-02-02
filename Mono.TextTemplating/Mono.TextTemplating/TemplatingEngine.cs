@@ -37,7 +37,15 @@ using System.Reflection;
 
 namespace Mono.TextTemplating
 {
-	public class TemplatingEngine : MarshalByRefObject, ITextTemplatingEngine
+    using System.Diagnostics;
+    using System.Runtime.InteropServices.ComTypes;
+    using System.Text.RegularExpressions;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Scripting;
+    using Microsoft.CodeAnalysis.Scripting;
+
+    public class TemplatingEngine : MarshalByRefObject, ITextTemplatingEngine
 	{
 		public string ProcessTemplate (string content, ITextTemplatingEngineHost host)
 		{
@@ -173,10 +181,60 @@ namespace Mono.TextTemplating
 				pars.CompilerOptions = "/noconfig";
 			else if (!pars.CompilerOptions.Contains ("/noconfig"))
 				pars.CompilerOptions = "/noconfig " + pars.CompilerOptions;
-			return settings.Provider.CompileAssemblyFromDom (pars, ccu);
+			return CompileAssemblyFromDom (settings.Provider, pars, ccu);
 		}
 
-		static string [] ProcessReferences (ITextTemplatingEngineHost host, ParsedTemplate pt, TemplateSettings settings)
+	    static CompilerResults CompileAssemblyFromDom(CodeDomProvider provider, CompilerParameters pars, CodeCompileUnit ccu)
+	    {
+	        var ns = ccu.Namespaces.Cast<CodeNamespace>().Single();
+	        var td = ns.Types.Cast<CodeTypeDeclaration>().Single();
+
+	        string script;
+	        using (var sw = new StringWriter())
+	        {
+	            provider.GenerateCodeFromType(td, sw, new CodeGeneratorOptions());
+	            script = sw.ToString();
+	        }
+
+	        var options =
+	            ScriptOptions.Default
+	                         .AddReferences(typeof(TextTransformation).Assembly)
+	                         .AddImports(from CodeNamespaceImport import in ns.Imports select import.Namespace);
+
+	        var results = new CompilerResults(pars.TempFiles);
+	        IEnumerable<Diagnostic> diagnostics = null;
+
+	        try
+	        {
+	            var type = CSharpScript.EvaluateAsync<Type>(script + Environment.NewLine + $"typeof({td.Name})", options)
+	                .GetAwaiter().GetResult();
+	            results.CompiledAssembly = type.Assembly;
+	        }
+	        catch (CompilationErrorException e)
+	        {
+	            diagnostics = e.Diagnostics;
+	        }
+
+            if (diagnostics != null)
+	        {
+	            var errors =
+	                from d in diagnostics
+                    where d.Severity == DiagnosticSeverity.Error
+	                let loc = d.Location.GetMappedLineSpan()
+	                select new CompilerError(loc.Path,
+	                                         loc.StartLinePosition.Line,
+	                                         loc.StartLinePosition.Character,
+	                                         d.Id,
+	                                         d.GetMessage());
+
+	            foreach (var error in errors)
+	                results.Errors.Add(error);
+	        }
+
+	        return results;
+	    }
+
+	    static string [] ProcessReferences (ITextTemplatingEngineHost host, ParsedTemplate pt, TemplateSettings settings)
 		{
 			var resolved = new Dictionary<string, string> ();
 
@@ -977,7 +1035,7 @@ namespace Mono.TextTemplating
 			type.Members.Add (helperCls);
 		}
 		
-		#region CodeDom helpers
+#region CodeDom helpers
 		
 		static CodeTypeReference TypeRef<T> ()
 		{
@@ -1082,7 +1140,7 @@ namespace Mono.TextTemplating
 			};
 		}
 
-		#endregion
+#endregion
 
 		//HACK: older versions of Mono don't implement GenerateCodeFromMember
 		// We have a workaround via reflection. First attempt to reflect the members we need to work around it.
@@ -1102,9 +1160,9 @@ namespace Mono.TextTemplating
 				return;
 			}
 
-			#pragma warning disable 0618
+#pragma warning disable 0618
 			var generator = (CodeGenerator) provider.CreateGenerator ();
-			#pragma warning restore 0618
+#pragma warning restore 0618
 			var dummy = new CodeTypeDeclaration ("Foo");
 
 			foreach (CodeTypeMember member in members) {

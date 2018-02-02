@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TextTemplating;
 using System.CodeDom.Compiler;
@@ -33,7 +34,7 @@ using System.Collections.Generic;
 
 namespace Mono.TextTemplating
 {
-	public sealed class CompiledTemplate : MarshalByRefObject, IDisposable
+    public sealed class CompiledTemplate : MarshalByRefObject, IDisposable
 	{
 		ITextTemplatingEngineHost host;
 		object textTransformation;
@@ -53,7 +54,9 @@ namespace Mono.TextTemplating
 		void Load (CompilerResults results, string fullName)
 		{
 			var assembly = results.CompiledAssembly;
-			Type transformType = assembly.GetType (fullName);
+			//Type transformType = assembly.GetType (fullName);
+			var name = fullName.Split('.').Last();
+			Type transformType = assembly.GetExportedTypes().Single(t => t.Name == name);
 			//MS Templating Engine does not look on the type itself, 
 			//it checks only that required methods are exists in the compiled type 
 			textTransformation = Activator.CreateInstance (transformType);
