@@ -34,12 +34,12 @@ namespace Mono.TextTemplating.Tests
 	[TestFixture]
 	public class TextTemplatingSessionTests
 	{
-		[Test]
+		[Test, Ignore(nameof(AppDomain) + ".CreateInstanceFromAndUnwrap is not supported on .NET Standard.")]
 		public void AppDomainSerializationTest ()
 		{
 			var guid = Guid.NewGuid ();
 			var appDomain = AppDomain.CreateDomain ("TextTemplatingSessionSerializationTestAppDomain");
-
+            /*
 			var session = (TextTemplatingSession)appDomain.CreateInstanceFromAndUnwrap (
 				typeof(TextTemplatingSession).Assembly.Location,
 				typeof(TextTemplatingSession).FullName,
@@ -50,7 +50,7 @@ namespace Mono.TextTemplating.Tests
 				null,
 				null);
 
-			Assert.AreEqual (guid, session.Id);
+			Assert.AreEqual (guid, session.Id);*/
 		}
 	}
 }

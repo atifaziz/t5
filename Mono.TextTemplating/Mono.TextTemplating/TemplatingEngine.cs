@@ -144,10 +144,12 @@ namespace Mono.TextTemplating
 			var domain = host.ProvideTemplatingAppDomain (content);
 			if (domain != null) {
 				var type = typeof(CompiledTemplate);
-				var obj = domain.CreateInstanceFromAndUnwrap (type.Assembly.Location, type.FullName, false,
+				var obj = /*domain.CreateInstanceFromAndUnwrap (type.Assembly.Location, type.FullName, false,
 					BindingFlags.Default, null,
 					new object[] { host, results, templateClassFullName, settings.Culture, references.ToArray () },
-					null, null);
+					null, null)*/
+				    Activator.CreateInstance(Assembly.LoadFrom(type.Assembly.Location).GetType(type.FullName, throwOnError: true),
+				                             BindingFlags.Default, new object[] { host, results, templateClassFullName, settings.Culture, references.ToArray () });
 				return (CompiledTemplate)obj;
 			}
 			return new CompiledTemplate (host, results, templateClassFullName, settings.Culture, references.ToArray ());
