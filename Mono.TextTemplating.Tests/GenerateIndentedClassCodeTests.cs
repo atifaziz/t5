@@ -1,4 +1,4 @@
-﻿//
+//
 // GenerateIndentedClassCodeTests.cs
 //
 // Author:

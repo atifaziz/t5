@@ -1,4 +1,4 @@
-﻿//
+//
 // TextTemplatingSessionTests.cs
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿//
+//
 // FileUtil.cs
 //
 // Author:

@@ -1,4 +1,4 @@
-﻿//
+//
 // EngineTests.cs
 //
 // Author:
