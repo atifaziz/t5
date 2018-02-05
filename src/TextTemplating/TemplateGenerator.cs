@@ -106,7 +106,7 @@ namespace T5.TextTemplating
 
             try {
                 if (!errors.HasErrors)
-                    File.WriteAllText (outputFile, output, encoding);
+                    WriteAllTextToFile (outputFile, output, encoding);
             } catch (IOException ex) {
                 AddError ("Could not write output file '" + outputFile + "':\n" + ex);
             }
@@ -152,12 +152,23 @@ namespace T5.TextTemplating
 
             try {
                 if (!errors.HasErrors)
-                    File.WriteAllText (outputFile, output, encoding);
+                    WriteAllTextToFile (outputFile, output, encoding);
             } catch (IOException ex) {
                 AddError ("Could not write output file '" + outputFile + "':\n" + ex);
             }
 
             return !errors.HasErrors;
+        }
+
+        static readonly Encoding BomlessUtf8Encoding = new UTF8Encoding(false);
+
+        static void WriteAllTextToFile (string path, string contents, Encoding encoding)
+        {
+            File.WriteAllText (path, contents,
+                               (encoding is UTF8Encoding || "utf-8".Equals(encoding.WebName, StringComparison.OrdinalIgnoreCase))
+                               && encoding != BomlessUtf8Encoding
+                               ? BomlessUtf8Encoding
+                               : encoding);
         }
 
         public bool PreprocessTemplate (string inputFileName, string className, string classNamespace, string inputContent,
