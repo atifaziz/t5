@@ -1,0 +1,51 @@
+version: '{build}'
+image: Visual Studio 2017
+skip_commits:
+  files:
+    - '*.md'
+    - '*.txt'
+skip_tags: true
+init:
+#
+# Some unit tests that are sensitive to line-endings can fail because it is
+# expected that while tests have line-endings normalized on check-in, the
+# working directory uses the native EOL of the platform on check-out.
+#
+# Accorting to `.gitattributes` documentation:
+#
+#     To control what line ending style is used in the working
+#     directory, use the `eol` attribute for a single file and the
+#     `core.eol` configuration variable for all text files. Note
+#     that `core.autocrlf` overrides `core.eol`.
+#
+# Below, `core.autocrlf` is set to `true` during the build initialization
+# phase to make sure that we get CRLF on Windows on check-out.
+#
+- cmd: >-
+    git config --global core.autocrlf true
+build_script:
+- ps: >-
+    $id = $env:APPVEYOR_REPO_COMMIT_TIMESTAMP -replace '([-:]|\.0+Z)', ''
+
+    $id = $id.Substring(0, 13)
+
+    .\pack.cmd ci-$id
+test_script:
+- cmd: test.cmd
+artifacts:
+- path: dist\*.nupkg
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/raboof/api/v2/package
+  api_key:
+    secure: fhGwXyO35FSshRzs5GWmF1LJTrd1sIqmS/jNCSfO2LfOciuYAKiXuFMYZFGiTAl+
+  symbol_server: https://www.myget.org/F/raboof/symbols/api/v2/package
+  on:
+    branch: master
+notifications:
+- provider: Email
+  to:
+  - raboof-ci@googlegroups.com
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: false
