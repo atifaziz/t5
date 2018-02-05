@@ -55,7 +55,7 @@ namespace Mono.TextTemplating.Tests
 			string input = InputTemplate_ControlBlockAfterIncludedTemplateWithClassFeatureBlock;
 			DummyHost host = CreateDummyHostForControlBlockAfterIncludedTemplateWithClassFeatureBlockTest ();
 			
-			string expectedOutput = TemplatingEngineHelper.CleanCodeDom (Output_ControlBlockAfterIncludedTemplateWithClassFeatureBlock, "\n");
+			string expectedOutput = TemplatingEngineHelper.CleanCodeDom (Output_ControlBlockAfterIncludedTemplateWithClassFeatureBlock.Replace ("\\n", Environment.NewLine.Replace ("\r", "\\r").Replace ("\n", "\\n")), "\n");
 			string output = Preprocess (input, host);
 			
 			Assert.AreEqual (expectedOutput, output, output);
@@ -66,7 +66,7 @@ namespace Mono.TextTemplating.Tests
 		{
 			string input = InputTemplate_CaptureEncodingAndExtension;
 			string output = Preprocess (input);
-			string expectedOutput = TemplatingEngineHelper.CleanCodeDom (Output_CaptureEncodingAndExtension, "\n");
+			string expectedOutput = TemplatingEngineHelper.CleanCodeDom (Output_CaptureEncodingAndExtension.Replace ("\\n", Environment.NewLine.Replace ("\r", "\\r").Replace ("\n", "\\n")), "\n");
 
 			Assert.AreEqual (expectedOutput, output, output);
 		}

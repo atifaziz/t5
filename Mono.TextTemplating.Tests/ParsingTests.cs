@@ -85,7 +85,7 @@ baz \#>
 			Assert.IsTrue (tk.Advance ());
 			Assert.AreEqual (new Location (tf, 2, 1), tk.Location);
 			Assert.AreEqual (State.Content, tk.State);
-			Assert.AreEqual ("Line One\nLine Two\n", tk.Value);
+			Assert.AreEqual ("Line One" + Environment.NewLine + "Line Two" + Environment.NewLine, tk.Value);
 			
 			//line 4, 5, 6
 			Assert.IsTrue (tk.Advance ());
@@ -93,7 +93,7 @@ baz \#>
 			Assert.AreEqual (new Location (tf, 4, 3), tk.Location);
 			Assert.AreEqual (new Location (tf, 6, 3), tk.TagEndLocation);
 			Assert.AreEqual (State.Block, tk.State);
-			Assert.AreEqual ("\nfoo\n", tk.Value);
+			Assert.AreEqual (Environment.NewLine + "foo" + Environment.NewLine, tk.Value);
 			
 			//line 7
 			Assert.IsTrue (tk.Advance ());
@@ -111,7 +111,7 @@ baz \#>
 			Assert.IsTrue (tk.Advance ());
 			Assert.AreEqual (new Location (tf, 7, 22), tk.Location);
 			Assert.AreEqual (State.Content, tk.State);
-			Assert.AreEqual ("\nLine Four\n", tk.Value);
+			Assert.AreEqual (Environment.NewLine + "Line Four" + Environment.NewLine, tk.Value);
 			
 			//line 9, 10, 11
 			Assert.IsTrue (tk.Advance ());
@@ -119,7 +119,7 @@ baz \#>
 			Assert.AreEqual (new Location (tf, 9, 4), tk.Location);
 			Assert.AreEqual (new Location (tf, 11, 3), tk.TagEndLocation);
 			Assert.AreEqual (State.Helper, tk.State);
-			Assert.AreEqual (" \nbaz \\#>\n", tk.Value);
+			Assert.AreEqual (" " + Environment.NewLine + "baz \\#>" + Environment.NewLine, tk.Value);
 			
 			//line 12
 			Assert.IsTrue (tk.Advance ());
@@ -156,12 +156,12 @@ baz \#>
 			Assert.AreEqual (new Location (tf, 1, 1), dirs[0].TagStartLocation);
 			Assert.AreEqual (new Location (tf, 1, 34), dirs[0].EndLocation);
 			
-			Assert.AreEqual ("Line One\nLine Two\n", content[0].Text);
-			Assert.AreEqual ("\nfoo\n", content[1].Text);
+			Assert.AreEqual ("Line One" + Environment.NewLine + "Line Two" + Environment.NewLine, content[0].Text);
+			Assert.AreEqual (Environment.NewLine + "foo" + Environment.NewLine, content[1].Text);
 			Assert.AreEqual ("Line Three ", content[2].Text);
 			Assert.AreEqual (" bar ", content[3].Text);
-			Assert.AreEqual ("\nLine Four\n", content[4].Text);
-			Assert.AreEqual (" \nbaz \\#>\n", content[5].Text);
+			Assert.AreEqual (Environment.NewLine + "Line Four" + Environment.NewLine, content[4].Text);
+			Assert.AreEqual (" " + Environment.NewLine + "baz \\#>" + Environment.NewLine, content[5].Text);
 			
 			Assert.AreEqual (SegmentType.Content, content[0].Type);
 			Assert.AreEqual (SegmentType.Block, content[1].Type);
