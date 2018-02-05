@@ -9,8 +9,16 @@
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\bin\Release\</OutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\T5.TextTemplating\T5.TextTemplating.csproj" />
+    <ProjectReference Include="..\TextTemplating\T5.TextTemplating.csproj" />
   </ItemGroup>
 
   <ItemGroup>
