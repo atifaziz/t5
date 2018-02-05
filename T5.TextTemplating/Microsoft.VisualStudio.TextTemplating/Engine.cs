@@ -1,5 +1,5 @@
 // 
-// Test.cs
+// Engine.cs
 //  
 // Author:
 //       Mikayla Hutchinson <m.j.hutchinson@gmail.com>
@@ -26,47 +26,33 @@
 
 using System;
 using System.IO;
+using System.Text;
+using System.Collections.Generic;
+using System.CodeDom;
+using System.CodeDom.Compiler;
+using T5.TextTemplating;
 
-namespace Mono.TextTemplating.Tests
+namespace Microsoft.VisualStudio.TextTemplating
 {
-	public static class TemplatingEngineHelper
+	public class Engine : ITextTemplatingEngine
 	{
-		/// <summary>
-		/// Cleans CodeDOM generated code so that Windows/Mac and Mono/.NET output can be compared.
-		/// </summary>
-		public static string CleanCodeDom (string input, string newLine)
+		TemplatingEngine engine = new TemplatingEngine ();
+		
+		public Engine ()
 		{
-			using (var writer = new StringWriter ()) {
-				using (var reader = new StringReader (input)) {
-
-					bool afterLineDirective = true;
-					bool stripHeader = true;
-
-					string line;
-					while ((line = reader.ReadLine ()) != null) {
-
-						if (stripHeader) {
-							if (line.StartsWith ("//", StringComparison.Ordinal) || string.IsNullOrWhiteSpace (line))
-								continue;
-							stripHeader = false;
-						}
-
-						if (afterLineDirective) {
-							if (string.IsNullOrWhiteSpace (line))
-								continue;
-							afterLineDirective = false;
-						}
-
-						if (line.Contains ("#line")) {
-							afterLineDirective = true;
-						}
-
-						writer.Write (line);
-						writer.Write (newLine);
-					}
-				}
-				return writer.ToString ();
-			}
 		}
+		
+		public string ProcessTemplate (string content, ITextTemplatingEngineHost host)
+		{
+			return engine.ProcessTemplate (content, host);
+		}
+		
+		public string PreprocessTemplate (string content, ITextTemplatingEngineHost host, string className, 
+			string classNamespace, out string language, out string[] references)
+		{
+			return engine.PreprocessTemplate (content, host, className, classNamespace, out language, out references);
+		}
+		
+		public const string CacheAssembliesOptionString = "CacheAssemblies";
 	}
 }

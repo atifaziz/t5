@@ -35,7 +35,7 @@ using Microsoft.VisualStudio.TextTemplating;
 using System.Linq;
 using System.Reflection;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating
 {
     using System.Diagnostics;
     using System.Runtime.InteropServices.ComTypes;

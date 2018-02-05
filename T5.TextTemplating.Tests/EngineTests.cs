@@ -27,7 +27,7 @@
 using System;
 using NUnit.Framework;
 
-namespace Mono.TextTemplating.Tests
+namespace T5.TextTemplating.Tests
 {
 	[TestFixture]
 	public class EngineTests

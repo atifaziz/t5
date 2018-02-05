@@ -29,7 +29,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TextTemplating;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating
 {
 	public class TemplateSettings
 	{

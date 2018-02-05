@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mono.TextTemplating\Mono.TextTemplating.csproj" />
+    <ProjectReference Include="..\T5.TextTemplating\T5.TextTemplating.csproj" />
   </ItemGroup>
 
 </Project>

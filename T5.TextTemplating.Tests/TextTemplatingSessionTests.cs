@@ -1,21 +1,21 @@
-// 
-// CrossAppDomainAssemblyResolver.cs
-//  
+//
+// TextTemplatingSessionTests.cs
+//
 // Author:
-//       Mikayla Hutchinson <m.j.hutchinson@gmail.com>
-// 
-// Copyright (c) 2010 Novell, Inc. (http://www.novell.com)
-// 
+//       Matt Ward <matt.ward@xamarin.com>
+//
+// Copyright (c) 2016 Xamarin Inc. (http://xamarin.com)
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,34 +25,32 @@
 // THE SOFTWARE.
 
 using System;
+using System.Reflection;
+using Microsoft.VisualStudio.TextTemplating;
+using NUnit.Framework;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating.Tests
 {
-	/// <summary>
-	/// Provides a handler for AssemblyResolve events that looks them up in the domain that created the resolver.
-	/// </summary>
-	[Serializable]
-	public class CrossAppDomainAssemblyResolver
+	[TestFixture]
+	public class TextTemplatingSessionTests
 	{
-		readonly ParentDomainLookup parent = new ParentDomainLookup ();
-		
-		public System.Reflection.Assembly Resolve (object sender, ResolveEventArgs args)
+		[Test, Ignore(nameof(AppDomain) + ".CreateInstanceFromAndUnwrap is not supported on .NET Standard.")]
+		public void AppDomainSerializationTest ()
 		{
-			var location = parent.GetAssemblyPath (args.Name);
-			if (location != null)
-				return System.Reflection.Assembly.LoadFrom (location);
-			return null;
-		}
-		
-		class ParentDomainLookup : MarshalByRefObject
-		{
-			public string GetAssemblyPath (string name)
-			{
-				var assem = System.Reflection.Assembly.Load (name);
-				if (assem != null)
-					return assem.Location;
-				return null;
-			}
+			var guid = Guid.NewGuid ();
+			var appDomain = AppDomain.CreateDomain ("TextTemplatingSessionSerializationTestAppDomain");
+            /*
+			var session = (TextTemplatingSession)appDomain.CreateInstanceFromAndUnwrap (
+				typeof(TextTemplatingSession).Assembly.Location,
+				typeof(TextTemplatingSession).FullName,
+				false,
+				BindingFlags.Public | BindingFlags.Instance,
+				null,
+				new object[] { guid },
+				null,
+				null);
+
+			Assert.AreEqual (guid, session.Id);*/
 		}
 	}
 }

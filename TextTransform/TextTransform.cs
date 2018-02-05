@@ -29,7 +29,7 @@ using System.IO;
 using System.Collections.Generic;
 using Mono.Options;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating
 {
 	class TextTransform
 	{

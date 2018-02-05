@@ -26,7 +26,7 @@
 
 using System;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating
 {
 	
 	public class Tokeniser

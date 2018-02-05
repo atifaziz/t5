@@ -3,15 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <AssemblyName>dotnet-tt</AssemblyName>
     <PackageType>DotNetCliTool</PackageType>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mono.TextTemplating\Mono.TextTemplating.csproj" />
+    <ProjectReference Include="..\T5.TextTemplating\T5.TextTemplating.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,7 @@
-# Mono.TextTemplating
+# T5
 
-Mono.TextTemplating is an open-source implementation of the T4 text
-templating engine.
+T5 is an open-source implementation of the T4 text templating engine
+for .NET Core based on and derived from [Mono.TextTemplating][mono-tt].
 
-NuGet packages are available at https://www.nuget.org/packages/Mono.TextTemplating
+
+[mono-tt]: https://www.nuget.org/packages/Mono.TextTemplating

@@ -32,7 +32,7 @@ using System.CodeDom.Compiler;
 using System.Globalization;
 using System.Collections.Generic;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating
 {
     public sealed class CompiledTemplate : MarshalByRefObject, IDisposable
 	{

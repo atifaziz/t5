@@ -1,10 +1,10 @@
 // 
-// Engine.cs
+// CrossAppDomainAssemblyResolver.cs
 //  
 // Author:
 //       Mikayla Hutchinson <m.j.hutchinson@gmail.com>
 // 
-// Copyright (c) 2009 Novell, Inc. (http://www.novell.com)
+// Copyright (c) 2010 Novell, Inc. (http://www.novell.com)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,34 +25,35 @@
 // THE SOFTWARE.
 
 using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using Mono.TextTemplating;
 
-namespace Microsoft.VisualStudio.TextTemplating
+namespace T5.TextTemplating
 {
-	public class Engine : ITextTemplatingEngine
+	/// <summary>
+	/// Provides a handler for AssemblyResolve events that looks them up in the domain that created the resolver.
+	/// </summary>
+	[Serializable]
+	public class CrossAppDomainAssemblyResolver
 	{
-		TemplatingEngine engine = new TemplatingEngine ();
+		readonly ParentDomainLookup parent = new ParentDomainLookup ();
 		
-		public Engine ()
+		public System.Reflection.Assembly Resolve (object sender, ResolveEventArgs args)
 		{
+			var location = parent.GetAssemblyPath (args.Name);
+			if (location != null)
+				return System.Reflection.Assembly.LoadFrom (location);
+			return null;
 		}
 		
-		public string ProcessTemplate (string content, ITextTemplatingEngineHost host)
+		class ParentDomainLookup : MarshalByRefObject
 		{
-			return engine.ProcessTemplate (content, host);
+			public string GetAssemblyPath (string name)
+			{
+				var assem = System.Reflection.Assembly.Load (name);
+				if (assem != null)
+					return assem.Location;
+				return null;
+			}
 		}
-		
-		public string PreprocessTemplate (string content, ITextTemplatingEngineHost host, string className, 
-			string classNamespace, out string language, out string[] references)
-		{
-			return engine.PreprocessTemplate (content, host, className, classNamespace, out language, out references);
-		}
-		
-		public const string CacheAssembliesOptionString = "CacheAssemblies";
 	}
 }
+

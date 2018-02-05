@@ -1,5 +1,5 @@
 // 
-// AssemblyInfo.cs
+// Test.cs
 //  
 // Author:
 //       Mikayla Hutchinson <m.j.hutchinson@gmail.com>
@@ -23,17 +23,50 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System.Reflection;
-using System.Runtime.CompilerServices;
+
 using System;
+using System.IO;
 
-[assembly: AssemblyDescription("An implementation of Visual Studio's T4 text templating")]
-[assembly: AssemblyCompany("The Mono Project")]
-[assembly: AssemblyProduct("MonoDevelop")]
-[assembly: AssemblyCopyright("MIT/X11")]
-[assembly: CLSCompliant (true)]
+namespace T5.TextTemplating.Tests
+{
+	public static class TemplatingEngineHelper
+	{
+		/// <summary>
+		/// Cleans CodeDOM generated code so that Windows/Mac and Mono/.NET output can be compared.
+		/// </summary>
+		public static string CleanCodeDom (string input, string newLine)
+		{
+			using (var writer = new StringWriter ()) {
+				using (var reader = new StringReader (input)) {
 
-[assembly: InternalsVisibleTo ("Mono.TextTemplating.Tests,PublicKey=0024000004800000940000000602000000240000525341310004000001000100490b59506a03eb5fc5524722a6526eff804b7880a968a581a0bbb73cd6ab93c7b94a14150cb4ea40f610bebf607cea5e8a93ef25d124983300f4bdfe44859430a20a4ed2ac32cfd3a6f0aa12702df819b7799cc0fcf077eea706a27252d59a8a10e5164c2cdddd6680ca76b02ca244e83c1a8cc44b2691052b93ab30bcc613ad")]
-[assembly: InternalsVisibleTo ("Mono.TextTemplating.Tests")]
+					bool afterLineDirective = true;
+					bool stripHeader = true;
 
-//[assembly: AssemblyVersion("1.0.0.0")]
+					string line;
+					while ((line = reader.ReadLine ()) != null) {
+
+						if (stripHeader) {
+							if (line.StartsWith ("//", StringComparison.Ordinal) || string.IsNullOrWhiteSpace (line))
+								continue;
+							stripHeader = false;
+						}
+
+						if (afterLineDirective) {
+							if (string.IsNullOrWhiteSpace (line))
+								continue;
+							afterLineDirective = false;
+						}
+
+						if (line.Contains ("#line")) {
+							afterLineDirective = true;
+						}
+
+						writer.Write (line);
+						writer.Write (newLine);
+					}
+				}
+				return writer.ToString ();
+			}
+		}
+	}
+}

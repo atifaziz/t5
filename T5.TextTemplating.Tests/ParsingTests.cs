@@ -28,7 +28,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace Mono.TextTemplating.Tests
+namespace T5.TextTemplating.Tests
 {
 	
 	

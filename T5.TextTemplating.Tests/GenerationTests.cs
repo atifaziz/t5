@@ -30,7 +30,7 @@ using System.IO;
 using NUnit.Framework;
 using Microsoft.VisualStudio.TextTemplating;
 
-namespace Mono.TextTemplating.Tests
+namespace T5.TextTemplating.Tests
 {
 	
 	

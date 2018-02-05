@@ -29,7 +29,7 @@ using System.Collections.Generic;
 using System.CodeDom.Compiler;
 using Microsoft.VisualStudio.TextTemplating;
 
-namespace Mono.TextTemplating.Tests
+namespace T5.TextTemplating.Tests
 {
 	
 	public class DummyHost : ITextTemplatingEngineHost

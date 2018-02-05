@@ -30,7 +30,7 @@ using System.CodeDom.Compiler;
 using NUnit.Framework;
 using System.IO;
 
-namespace Mono.TextTemplating.Tests
+namespace T5.TextTemplating.Tests
 {
 	[TestFixture]
 	public class GenerateIndentedClassCodeTests

@@ -30,7 +30,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.VisualStudio.TextTemplating;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating
 {
 	public class ParsedTemplate
 	{

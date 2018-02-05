@@ -30,8 +30,6 @@ using System.Runtime.CompilerServices;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyDescription("T4 text transformation tool")]
-[assembly: AssemblyCompany("The Mono Project")]
-[assembly: AssemblyProduct("MonoDevelop")]
 [assembly: AssemblyCopyright("MIT/X11")]
 
 //[assembly: AssemblyVersion("1.0.0.0")]

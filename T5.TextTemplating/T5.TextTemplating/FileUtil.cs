@@ -26,7 +26,7 @@
 using System;
 using System.IO;
 
-namespace Mono.TextTemplating
+namespace T5.TextTemplating
 {
 	static class FileUtil
 	{
