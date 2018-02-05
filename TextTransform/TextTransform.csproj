@@ -6,10 +6,20 @@
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <AssemblyName>dotnet-tt</AssemblyName>
+    <PackageType>DotNetCliTool</PackageType>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Mono.TextTemplating\Mono.TextTemplating.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      This file instructs dotnet.exe to use whichever version of .NET Core is installed,
+      which may not be the version this tool is compiled against.
+    -->
+    <Content Include="prefercliruntime" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

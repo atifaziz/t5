@@ -34,7 +34,7 @@ namespace Mono.TextTemplating
 	class TextTransform
 	{
 		static OptionSet optionSet;
-		const string name ="TextTransform.exe";
+		const string name ="dotnet-tt";
 		
 		public static int Main (string[] args)
 		{
