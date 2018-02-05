@@ -31,27 +31,27 @@ using NUnit.Framework;
 
 namespace T5.TextTemplating.Tests
 {
-	[TestFixture]
-	public class TextTemplatingSessionTests
-	{
-		[Test, Ignore(nameof(AppDomain) + ".CreateInstanceFromAndUnwrap is not supported on .NET Standard.")]
-		public void AppDomainSerializationTest ()
-		{
-			var guid = Guid.NewGuid ();
-			var appDomain = AppDomain.CreateDomain ("TextTemplatingSessionSerializationTestAppDomain");
+    [TestFixture]
+    public class TextTemplatingSessionTests
+    {
+        [Test, Ignore(nameof(AppDomain) + ".CreateInstanceFromAndUnwrap is not supported on .NET Standard.")]
+        public void AppDomainSerializationTest ()
+        {
+            var guid = Guid.NewGuid ();
+            var appDomain = AppDomain.CreateDomain ("TextTemplatingSessionSerializationTestAppDomain");
             /*
-			var session = (TextTemplatingSession)appDomain.CreateInstanceFromAndUnwrap (
-				typeof(TextTemplatingSession).Assembly.Location,
-				typeof(TextTemplatingSession).FullName,
-				false,
-				BindingFlags.Public | BindingFlags.Instance,
-				null,
-				new object[] { guid },
-				null,
-				null);
+            var session = (TextTemplatingSession)appDomain.CreateInstanceFromAndUnwrap (
+                typeof(TextTemplatingSession).Assembly.Location,
+                typeof(TextTemplatingSession).FullName,
+                false,
+                BindingFlags.Public | BindingFlags.Instance,
+                null,
+                new object[] { guid },
+                null,
+                null);
 
-			Assert.AreEqual (guid, session.Id);*/
-		}
-	}
+            Assert.AreEqual (guid, session.Id);*/
+        }
+    }
 }
 

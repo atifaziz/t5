@@ -32,77 +32,77 @@ using System.IO;
 
 namespace T5.TextTemplating.Tests
 {
-	[TestFixture]
-	public class GenerateIndentedClassCodeTests
-	{
-		[Test]
-		public void FieldAndPropertyGenerated ()
-		{
-			var provider = CodeDomProvider.CreateProvider ("C#");
-			var field = CreateBoolField ();
-			var property = CreateBoolProperty ();
+    [TestFixture]
+    public class GenerateIndentedClassCodeTests
+    {
+        [Test]
+        public void FieldAndPropertyGenerated ()
+        {
+            var provider = CodeDomProvider.CreateProvider ("C#");
+            var field = CreateBoolField ();
+            var property = CreateBoolProperty ();
 
-			string output = TemplatingEngine.GenerateIndentedClassCode (provider, field, property);
-			output = FixOutput (output);
-			string expectedOutput = FixOutput (MethodAndFieldGeneratedOutput);
+            string output = TemplatingEngine.GenerateIndentedClassCode (provider, field, property);
+            output = FixOutput (output);
+            string expectedOutput = FixOutput (MethodAndFieldGeneratedOutput);
 
-			Assert.AreEqual (expectedOutput, output);
-		}
+            Assert.AreEqual (expectedOutput, output);
+        }
 
-		static CodeTypeMember CreateVoidMethod ()
-		{
-			var meth = new CodeMemberMethod { Name = "MyMethod" };
-			meth.ReturnType = new CodeTypeReference (typeof(void));
-			return meth;
-		}
+        static CodeTypeMember CreateVoidMethod ()
+        {
+            var meth = new CodeMemberMethod { Name = "MyMethod" };
+            meth.ReturnType = new CodeTypeReference (typeof(void));
+            return meth;
+        }
 
-		static CodeTypeMember CreateBoolField ()
-		{
-			var type = new CodeTypeReference (typeof(bool));
-			return new CodeMemberField { Name = "myField", Type = type };
-		}
+        static CodeTypeMember CreateBoolField ()
+        {
+            var type = new CodeTypeReference (typeof(bool));
+            return new CodeMemberField { Name = "myField", Type = type };
+        }
 
-		static CodeTypeMember CreateBoolProperty ()
-		{
-			var type = new CodeTypeReference (typeof(bool));
-			var prop = new CodeMemberProperty { Name = "MyProperty", Type = type };
-			prop.GetStatements.Add (
-				new CodeMethodReturnStatement (
-					new CodePrimitiveExpression (true)
-				)
-			);
-			return prop;
-		}
+        static CodeTypeMember CreateBoolProperty ()
+        {
+            var type = new CodeTypeReference (typeof(bool));
+            var prop = new CodeMemberProperty { Name = "MyProperty", Type = type };
+            prop.GetStatements.Add (
+                new CodeMethodReturnStatement (
+                    new CodePrimitiveExpression (true)
+                )
+            );
+            return prop;
+        }
 
-		/// <summary>
-		/// Remove empty lines which are not generated on Mono.
-		/// </summary>
-		static string FixOutput (string output, string newLine = "\n")
-		{
-			using (var writer = new StringWriter ()) {
-				using (var reader = new StringReader (output)) {
+        /// <summary>
+        /// Remove empty lines which are not generated on Mono.
+        /// </summary>
+        static string FixOutput (string output, string newLine = "\n")
+        {
+            using (var writer = new StringWriter ()) {
+                using (var reader = new StringReader (output)) {
 
-					string line;
-					while ((line = reader.ReadLine ()) != null) {
-						if (!String.IsNullOrWhiteSpace (line)) {
-							writer.Write (line);
-							writer.Write (newLine);
-						}
-					}
-				}
-				return writer.ToString ();
-			}
-		}
+                    string line;
+                    while ((line = reader.ReadLine ()) != null) {
+                        if (!String.IsNullOrWhiteSpace (line)) {
+                            writer.Write (line);
+                            writer.Write (newLine);
+                        }
+                    }
+                }
+                return writer.ToString ();
+            }
+        }
 
-		public static string MethodAndFieldGeneratedOutput = 
-@"        
+        public static string MethodAndFieldGeneratedOutput =
+@"
         private bool myField;
-        
+
         private bool MyProperty {
             get {
                 return true;
             }
         }
 ";
-	}
+    }
 }

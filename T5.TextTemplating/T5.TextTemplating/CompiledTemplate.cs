@@ -1,21 +1,21 @@
-// 
+//
 // CompiledTemplate.cs
-//  
+//
 // Author:
 //       Nathan Baulch <nathan.baulch@gmail.com>
-// 
+//
 // Copyright (c) 2009 Nathan Baulch
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,114 +35,114 @@ using System.Collections.Generic;
 namespace T5.TextTemplating
 {
     public sealed class CompiledTemplate : MarshalByRefObject, IDisposable
-	{
-		ITextTemplatingEngineHost host;
-		object textTransformation;
-		readonly CultureInfo culture;
-		readonly string[] assemblyFiles;
-		
-		public CompiledTemplate (ITextTemplatingEngineHost host, CompilerResults results, string fullName, CultureInfo culture,
-			string[] assemblyFiles)
-		{
-			AppDomain.CurrentDomain.AssemblyResolve += ResolveReferencedAssemblies;
-			this.host = host;
-			this.culture = culture;
-			this.assemblyFiles = assemblyFiles;
-			Load (results, fullName);
-		}
-		
-		void Load (CompilerResults results, string fullName)
-		{
-			var assembly = results.CompiledAssembly;
-			//Type transformType = assembly.GetType (fullName);
-			var name = fullName.Split('.').Last();
-			Type transformType = assembly.GetExportedTypes().Single(t => t.Name == name);
-			//MS Templating Engine does not look on the type itself, 
-			//it checks only that required methods are exists in the compiled type 
-			textTransformation = Activator.CreateInstance (transformType);
-			
-			//set the host property if it exists
-			Type hostType = null;
-			var gen = host as TemplateGenerator;
-			if (gen != null) {
-				hostType = gen.SpecificHostType;
-			}
-			var hostProp = transformType.GetProperty ("Host", hostType ?? typeof(ITextTemplatingEngineHost));
-			if (hostProp != null && hostProp.CanWrite)
-				hostProp.SetValue (textTransformation, host, null);
-			
-			var sessionHost = host as ITextTemplatingSessionHost;
-			if (sessionHost != null) {
-				//FIXME: should we create a session if it's null?
-				var sessionProp = transformType.GetProperty ("Session", typeof (IDictionary<string, object>));
-				sessionProp.SetValue (textTransformation, sessionHost.Session, null);
-			}
-		}
+    {
+        ITextTemplatingEngineHost host;
+        object textTransformation;
+        readonly CultureInfo culture;
+        readonly string[] assemblyFiles;
 
-		public string Process ()
-		{
-			var ttType = textTransformation.GetType ();
+        public CompiledTemplate (ITextTemplatingEngineHost host, CompilerResults results, string fullName, CultureInfo culture,
+            string[] assemblyFiles)
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveReferencedAssemblies;
+            this.host = host;
+            this.culture = culture;
+            this.assemblyFiles = assemblyFiles;
+            Load (results, fullName);
+        }
 
-			var errorProp = ttType.GetProperty ("Errors", BindingFlags.Instance | BindingFlags.NonPublic);
-			if (errorProp == null)
-				throw new ArgumentException ("Template must have 'Errors' property");
-			var errorMethod = ttType.GetMethod ("Error",new Type[]{typeof(string)});
-			if (errorMethod == null) {
-				throw new ArgumentException ("Template must have 'Error(string message)' method");
-			}
+        void Load (CompilerResults results, string fullName)
+        {
+            var assembly = results.CompiledAssembly;
+            //Type transformType = assembly.GetType (fullName);
+            var name = fullName.Split('.').Last();
+            Type transformType = assembly.GetExportedTypes().Single(t => t.Name == name);
+            //MS Templating Engine does not look on the type itself,
+            //it checks only that required methods are exists in the compiled type
+            textTransformation = Activator.CreateInstance (transformType);
 
-			var errors = (CompilerErrorCollection) errorProp.GetValue (textTransformation);
-			errors.Clear ();
-			
-			//set the culture
-			if (culture != null)
-				ToStringHelper.FormatProvider = culture;
-			else
-				ToStringHelper.FormatProvider = CultureInfo.InvariantCulture;
+            //set the host property if it exists
+            Type hostType = null;
+            var gen = host as TemplateGenerator;
+            if (gen != null) {
+                hostType = gen.SpecificHostType;
+            }
+            var hostProp = transformType.GetProperty ("Host", hostType ?? typeof(ITextTemplatingEngineHost));
+            if (hostProp != null && hostProp.CanWrite)
+                hostProp.SetValue (textTransformation, host, null);
 
-			string output = null;
+            var sessionHost = host as ITextTemplatingSessionHost;
+            if (sessionHost != null) {
+                //FIXME: should we create a session if it's null?
+                var sessionProp = transformType.GetProperty ("Session", typeof (IDictionary<string, object>));
+                sessionProp.SetValue (textTransformation, sessionHost.Session, null);
+            }
+        }
 
-			var initMethod = ttType.GetMethod ("Initialize");
-			var transformMethod = ttType.GetMethod ("TransformText");
+        public string Process ()
+        {
+            var ttType = textTransformation.GetType ();
 
-			if (initMethod == null) {
-				errorMethod.Invoke (textTransformation, new object[]{ "Error running transform: no method Initialize()" });
-			} else if (transformMethod == null) {
-				errorMethod.Invoke (textTransformation, new object[]{ "Error running transform: no method TransformText()" });
-			} else try {
-				initMethod.Invoke (textTransformation, null);
-				output = (string)transformMethod.Invoke (textTransformation, null);
-			} catch (Exception ex) {
-				errorMethod.Invoke (textTransformation, new object[]{ "Error running transform: " + ex });
-			}
+            var errorProp = ttType.GetProperty ("Errors", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (errorProp == null)
+                throw new ArgumentException ("Template must have 'Errors' property");
+            var errorMethod = ttType.GetMethod ("Error",new Type[]{typeof(string)});
+            if (errorMethod == null) {
+                throw new ArgumentException ("Template must have 'Error(string message)' method");
+            }
 
-			host.LogErrors (errors);
-			
-			ToStringHelper.FormatProvider = CultureInfo.InvariantCulture;
-			return output;
-		}
-		
-		Assembly ResolveReferencedAssemblies (object sender, ResolveEventArgs args)
-		{
-			AssemblyName asmName = new AssemblyName (args.Name);
-			foreach (var asmFile in assemblyFiles) {
-				if (asmName.Name == System.IO.Path.GetFileNameWithoutExtension (asmFile))
-					return Assembly.LoadFrom (asmFile);
-			}
+            var errors = (CompilerErrorCollection) errorProp.GetValue (textTransformation);
+            errors.Clear ();
 
-			var path = host.ResolveAssemblyReference (asmName.Name + ".dll");
-			if (System.IO.File.Exists (path))
-				return Assembly.LoadFrom (path);
+            //set the culture
+            if (culture != null)
+                ToStringHelper.FormatProvider = culture;
+            else
+                ToStringHelper.FormatProvider = CultureInfo.InvariantCulture;
 
-			return null;
-		}
-		
-		public void Dispose ()
-		{
-			if (host != null) {
-				host = null;
-				AppDomain.CurrentDomain.AssemblyResolve -= ResolveReferencedAssemblies;
-			}
-		}
-	}
+            string output = null;
+
+            var initMethod = ttType.GetMethod ("Initialize");
+            var transformMethod = ttType.GetMethod ("TransformText");
+
+            if (initMethod == null) {
+                errorMethod.Invoke (textTransformation, new object[]{ "Error running transform: no method Initialize()" });
+            } else if (transformMethod == null) {
+                errorMethod.Invoke (textTransformation, new object[]{ "Error running transform: no method TransformText()" });
+            } else try {
+                initMethod.Invoke (textTransformation, null);
+                output = (string)transformMethod.Invoke (textTransformation, null);
+            } catch (Exception ex) {
+                errorMethod.Invoke (textTransformation, new object[]{ "Error running transform: " + ex });
+            }
+
+            host.LogErrors (errors);
+
+            ToStringHelper.FormatProvider = CultureInfo.InvariantCulture;
+            return output;
+        }
+
+        Assembly ResolveReferencedAssemblies (object sender, ResolveEventArgs args)
+        {
+            AssemblyName asmName = new AssemblyName (args.Name);
+            foreach (var asmFile in assemblyFiles) {
+                if (asmName.Name == System.IO.Path.GetFileNameWithoutExtension (asmFile))
+                    return Assembly.LoadFrom (asmFile);
+            }
+
+            var path = host.ResolveAssemblyReference (asmName.Name + ".dll");
+            if (System.IO.File.Exists (path))
+                return Assembly.LoadFrom (path);
+
+            return null;
+        }
+
+        public void Dispose ()
+        {
+            if (host != null) {
+                host = null;
+                AppDomain.CurrentDomain.AssemblyResolve -= ResolveReferencedAssemblies;
+            }
+        }
+    }
 }

@@ -29,44 +29,44 @@ using NUnit.Framework;
 
 namespace T5.TextTemplating.Tests
 {
-	[TestFixture]
-	public class EngineTests
-	{
-		#pragma warning disable 414
-		static object [] ParameterParsingCases = {
-			new object [] { "foo=bar",             true,  "",     "",    "foo", "bar"     },
-			new object [] { "a=b",                 true,  "",     "",    "a",   "b"       },
-			new object [] { "a=b=c",               true,  "",     "",    "a",   "b=c"     },
-			new object [] { "!!c!d",               true,  "",     "",    "c",   "d"       },
-			new object [] { "!!!",                 false, "",     "",    "",    ""        },
-			new object [] { "a=",                  true,  "",     "",    "a",   ""        },
-			new object [] { "=",                   false, "",     "",    "",    ""        },
-			new object [] { "",                    false, "",     "",    "",    ""        },
-			new object [] { "!",                   false, "",     "",    "",    ""        },
-			new object [] { "a!",                  true,  "",     "",    "a",   ""        },
-			new object [] { "!b!c!d",              true,  "",     "b",   "c",   "d"       },
-			new object [] { "a!b!c!d",             true,  "a",    "b",   "c",   "d"       },
-			new object [] { "a=b!c!d!e",           true,  "",     "",    "a",   "b!c!d!e" },
-			new object [] { "a!b!c!d!e",           true,  "a",    "b",   "c",   "d!e"     },
-			new object [] { "foo!bar!baz!wibb!le", true,  "foo", "bar", "baz",  "wibb!le" },
-		};
-		#pragma warning restore 414
+    [TestFixture]
+    public class EngineTests
+    {
+        #pragma warning disable 414
+        static object [] ParameterParsingCases = {
+            new object [] { "foo=bar",             true,  "",     "",    "foo", "bar"     },
+            new object [] { "a=b",                 true,  "",     "",    "a",   "b"       },
+            new object [] { "a=b=c",               true,  "",     "",    "a",   "b=c"     },
+            new object [] { "!!c!d",               true,  "",     "",    "c",   "d"       },
+            new object [] { "!!!",                 false, "",     "",    "",    ""        },
+            new object [] { "a=",                  true,  "",     "",    "a",   ""        },
+            new object [] { "=",                   false, "",     "",    "",    ""        },
+            new object [] { "",                    false, "",     "",    "",    ""        },
+            new object [] { "!",                   false, "",     "",    "",    ""        },
+            new object [] { "a!",                  true,  "",     "",    "a",   ""        },
+            new object [] { "!b!c!d",              true,  "",     "b",   "c",   "d"       },
+            new object [] { "a!b!c!d",             true,  "a",    "b",   "c",   "d"       },
+            new object [] { "a=b!c!d!e",           true,  "",     "",    "a",   "b!c!d!e" },
+            new object [] { "a!b!c!d!e",           true,  "a",    "b",   "c",   "d!e"     },
+            new object [] { "foo!bar!baz!wibb!le", true,  "foo", "bar", "baz",  "wibb!le" },
+        };
+        #pragma warning restore 414
 
-		[Test]
-		[TestCaseSource(nameof (ParameterParsingCases))]
-		public void ParameterParsing (
-			string parameter, bool valid,
-			string expectedProcessor, string expectedDirective,
-			string expectedName, string expectedValue)
-		{
-			string processor, directive, name, value;
-			var success = TemplateGenerator.TryParseParameter (parameter, out processor, out directive, out name, out value);
+        [Test]
+        [TestCaseSource(nameof (ParameterParsingCases))]
+        public void ParameterParsing (
+            string parameter, bool valid,
+            string expectedProcessor, string expectedDirective,
+            string expectedName, string expectedValue)
+        {
+            string processor, directive, name, value;
+            var success = TemplateGenerator.TryParseParameter (parameter, out processor, out directive, out name, out value);
 
-			Assert.AreEqual (valid, success);
-			Assert.AreEqual (expectedProcessor, processor);
-			Assert.AreEqual (expectedDirective, directive);
-			Assert.AreEqual (expectedName, name);
-			Assert.AreEqual (expectedValue, value);
-		}
-	}
+            Assert.AreEqual (valid, success);
+            Assert.AreEqual (expectedProcessor, processor);
+            Assert.AreEqual (expectedDirective, directive);
+            Assert.AreEqual (expectedName, name);
+            Assert.AreEqual (expectedValue, value);
+        }
+    }
 }
