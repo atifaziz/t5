@@ -27,7 +27,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System;
 
-[assembly: AssemblyDescription("An implementation of Visual Studio's T4 text templating")]
 [assembly: AssemblyCopyright("MIT/X11")]
 [assembly: CLSCompliant (true)]
 

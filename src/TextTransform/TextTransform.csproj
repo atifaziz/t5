@@ -7,7 +7,6 @@
     <PackageId>T5.TextTransform.Tool</PackageId>
     <PackageType>DotNetCliTool</PackageType>
     <Description>T4 text transformation tool for dotnet CLI.</Description>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
