@@ -11,6 +11,38 @@ T5 is an open-source implementation of the T4 text templating engine
 for .NET Core based on and derived from [Mono.TextTemplating][mono-tt].
 
 
+## Usage
+
+The TextTransform tool can be installed into a .NET Core 2.0 project by adding
+a `<DotNetCliToolReference>` node to the project file, as shown below:
+
+```xml
+  <ItemGroup>
+    <DotNetCliToolReference Include="T5.TextTransform.Tool"
+                            Version="1.0.0-*" />
+  </ItemGroup>
+```
+
+Set the `Version` attribute value to the desired version of the tool.
+
+The reference will cause the tool to be installed whenever `dotnet restore`
+is run next. It can then be used as follows:
+
+    dotnet tt TEMPLATE
+
+Replace `TEMPLATE` with the path to your T4 template.
+
+For full help on usage, run:
+
+    dotnet tt --help
+
+When you run `dotnet tt`, make sure that you do so from the project's
+directory set as your shell's current directory otherwise `dotnet` will
+complain with an error message along the lines of:
+
+    No executable found matching command "dotnet-tt"
+
+
 ## Building
 
 Make sure that the .NET SDK Core 2.0 is installed.
