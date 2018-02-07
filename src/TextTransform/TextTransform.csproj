@@ -7,6 +7,13 @@
     <PackageId>T5.TextTransform.Tool</PackageId>
     <PackageType>DotNetCliTool</PackageType>
     <Description>T4 text transformation tool for dotnet CLI.</Description>
+    <Authors>Atif Aziz;Mikayla Hutchinson</Authors>
+    <Owners>Atif Aziz</Owners>
+    <PackageProjectUrl>https://github.com/atifaziz/t5</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/atifaziz/t5</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>t4;templating;texttransform</PackageTags>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

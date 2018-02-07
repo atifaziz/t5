@@ -4,6 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Description>T4 templating engine for .NET Core.</Description>
+    <Authors>Atif Aziz;Mikayla Hutchinson</Authors>
+    <Owners>Atif Aziz</Owners>
+    <PackageProjectUrl>https://github.com/atifaziz/t5</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/atifaziz/t5</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>t4;templating;texttransform</PackageTags>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
