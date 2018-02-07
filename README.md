@@ -11,6 +11,24 @@ T5 is an open-source implementation of the T4 text templating engine
 for .NET Core based on and derived from [Mono.TextTemplating][mono-tt].
 
 
+## Building
+
+Make sure that the .NET SDK Core 2.0 is installed.
+
+To build the project, run `build.cmd` on Windows or `build.sh` on macOS or a
+supported Linux distribution.
+
+To run the unit tests, run `test.cmd` on Windows or `test.sh` on macOS or a
+supported Linux distribution. The test script builds the project before
+running the unit tests.
+
+To build NuGet packages for distribution, run `pack.cmd` on Windows or
+`pack.sh` on macOS or a supported Linux distribution. The packaging script
+builds the project but does not run unit tests. The script accepts a single
+optional argument that is used as the version suffix of the packages, e.g.
+`beta1`.
+
+
 [win-build-badge]: https://img.shields.io/appveyor/ci/raboof/t5/master.svg?label=windows
 [win-builds]: https://ci.appveyor.com/project/raboof/t5
 [nix-build-badge]: https://img.shields.io/travis/atifaziz/t5/master.svg?label=linux
