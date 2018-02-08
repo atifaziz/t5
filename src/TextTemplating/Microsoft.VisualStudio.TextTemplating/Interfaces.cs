@@ -41,6 +41,9 @@ namespace Microsoft.VisualStudio.TextTemplating
     }
 
     [CLSCompliant(true)]
+    [Obsolete ("Use " + nameof(T5) + "."
+               + nameof(T5.TextTemplating) + "."
+               + nameof(T5.TextTemplating.TemplatingEngine) + " directly")]
     public interface ITextTemplatingEngine
     {
         string ProcessTemplate (string content, ITextTemplatingEngineHost host);

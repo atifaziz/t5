@@ -4,6 +4,7 @@
     <AssemblyName>dotnet-tt</AssemblyName>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>7.1</LangVersion>
     <PackageId>T5.TextTransform.Tool</PackageId>
     <PackageType>DotNetCliTool</PackageType>
     <Description>T4 text transformation tool for dotnet CLI.</Description>

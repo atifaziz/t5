@@ -25,22 +25,16 @@
 // THE SOFTWARE.
 
 using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
-using System.CodeDom;
-using System.CodeDom.Compiler;
 using T5.TextTemplating;
 
 namespace Microsoft.VisualStudio.TextTemplating
 {
+    [Obsolete ("Use " + nameof(T5) + "."
+                      + nameof(T5.TextTemplating) + "."
+                      + nameof(TemplatingEngine) + " directly")]
     public class Engine : ITextTemplatingEngine
     {
         TemplatingEngine engine = new TemplatingEngine ();
-
-        public Engine ()
-        {
-        }
 
         public string ProcessTemplate (string content, ITextTemplatingEngineHost host)
         {
