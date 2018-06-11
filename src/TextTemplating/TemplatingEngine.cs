@@ -199,6 +199,7 @@ namespace T5.TextTemplating
             var options =
                 ScriptOptions.Default
                              .AddReferences(typeof(TextTransformation).Assembly)
+                             .AddReferences(pars.ReferencedAssemblies.Cast<string>())
                              .AddImports(from CodeNamespaceImport import in ns.Imports select import.Namespace);
 
             var results = new CompilerResults(pars.TempFiles);
