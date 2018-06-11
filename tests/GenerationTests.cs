@@ -74,7 +74,7 @@ namespace T5.TextTemplating.Tests
                 #>
                 ", ref tmp, out tmp);
 
-            Assert.AreEqual (0, gen.Errors.Count, "ImportReferencesTest");
+            Assert.AreEqual (0, gen.Errors.Count, nameof(ImportLocalDirectoryReferencesTest));
         }
 
         [Test]
