@@ -64,14 +64,15 @@ namespace T5.TextTemplating.Tests
             gen.ReferencePaths.Add (Path.GetDirectoryName (typeof (System.Linq.Enumerable).Assembly.Location));
             gen.ReferencePaths.Add (Path.GetDirectoryName (typeof (JsonConvert).Assembly.Location));
             
-            gen.ProcessTemplate (null, @"<#@ assembly name=""System.dll"" #>
-<#@ assembly name=""System.Core.dll"" #>
-<#@ assembly name=""Newtonsoft.Json.dll"" #>
-<#@ import namespace=""Newtonsoft.Json"" #>
-<#
-    var content = JsonConvert.SerializeObject(""hello"");
-#>
-", ref tmp, out tmp);
+            gen.ProcessTemplate (null, @"
+                <#@ assembly name=""System.dll"" #>
+                <#@ assembly name=""System.Core.dll"" #>
+                <#@ assembly name=""Newtonsoft.Json.dll"" #>
+                <#@ import namespace=""Newtonsoft.Json"" #>
+                <#
+                    var content = JsonConvert.SerializeObject(""hello"");
+                #>
+                ", ref tmp, out tmp);
             
             Assert.AreEqual (0, gen.Errors.Count, "ImportReferencesTest");
         }
