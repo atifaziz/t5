@@ -25,15 +25,13 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Microsoft.VisualStudio.TextTemplating;
+using Newtonsoft.Json;
 
 namespace T5.TextTemplating.Tests
 {
-
-
     [TestFixture]
     public class GenerationTests
     {
@@ -55,6 +53,28 @@ namespace T5.TextTemplating.Tests
             gen.ReferencePaths.Add (Path.GetDirectoryName (typeof (System.Linq.Enumerable).Assembly.Location));
             gen.ProcessTemplate (null, "<#@ assembly name=\"System.dll\" #>\n<#@ assembly name=\"System.Core.dll\" #>", ref tmp, out tmp);
             Assert.AreEqual (0, gen.Errors.Count, "ImportReferencesTest");
+        }
+
+        [Test]
+        public void ImportLocalDirectoryReferencesTest ()
+        {
+            var gen = new TemplateGenerator ();
+            string tmp = null;
+            gen.ReferencePaths.Add (Path.GetDirectoryName (typeof (Uri).Assembly.Location));
+            gen.ReferencePaths.Add (Path.GetDirectoryName (typeof (System.Linq.Enumerable).Assembly.Location));
+            gen.ReferencePaths.Add (Path.GetDirectoryName (typeof (JsonConvert).Assembly.Location));
+
+            gen.ProcessTemplate (null, @"
+                <#@ assembly name=""System.dll"" #>
+                <#@ assembly name=""System.Core.dll"" #>
+                <#@ assembly name=""Newtonsoft.Json.dll"" #>
+                <#@ import namespace=""Newtonsoft.Json"" #>
+                <#
+                    var content = JsonConvert.SerializeObject(""hello"");
+                #>
+                ", ref tmp, out tmp);
+
+            Assert.AreEqual (0, gen.Errors.Count, nameof(ImportLocalDirectoryReferencesTest));
         }
 
         [Test]
