@@ -9,6 +9,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "T5.TextTemplating.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextTransform", "src\TextTransform\TextTransform.csproj", "{76F66FA6-639C-4689-9946-89A3E0DF76C5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6D8E0F4D-3234-4970-BE37-3B5B28BCE386}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
+		build.cmd = build.cmd
+		build.sh = build.sh
+		LICENSE = LICENSE
+		pack.cmd = pack.cmd
+		pack.sh = pack.sh
+		README.md = README.md
+		test.cmd = test.cmd
+		test.sh = test.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
