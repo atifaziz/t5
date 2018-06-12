@@ -19,7 +19,7 @@ a `<DotNetCliToolReference>` node to the project file, as shown below:
 ```xml
   <ItemGroup>
     <DotNetCliToolReference Include="T5.TextTransform.Tool"
-                            Version="1.0.1-*" />
+                            Version="1.1.0-*" />
   </ItemGroup>
 ```
 
