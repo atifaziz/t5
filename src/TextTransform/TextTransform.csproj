@@ -4,7 +4,7 @@
     <AssemblyName>dotnet-tt</AssemblyName>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <LangVersion>7.1</LangVersion>
     <PackageId>T5.TextTransform.Tool</PackageId>
     <PackageType>DotNetCliTool</PackageType>
