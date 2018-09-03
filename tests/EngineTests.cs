@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace T5.TextTemplating.Tests
@@ -32,8 +33,8 @@ namespace T5.TextTemplating.Tests
     [TestFixture]
     public class EngineTests
     {
-        #pragma warning disable 414
-        static object [] ParameterParsingCases = {
+#pragma warning disable 414
+        static object[] ParameterParsingCases = {
             new object [] { "foo=bar",             true,  "",     "",    "foo", "bar"     },
             new object [] { "a=b",                 true,  "",     "",    "a",   "b"       },
             new object [] { "a=b=c",               true,  "",     "",    "a",   "b=c"     },
@@ -50,23 +51,55 @@ namespace T5.TextTemplating.Tests
             new object [] { "a!b!c!d!e",           true,  "a",    "b",   "c",   "d!e"     },
             new object [] { "foo!bar!baz!wibb!le", true,  "foo", "bar", "baz",  "wibb!le" },
         };
-        #pragma warning restore 414
+#pragma warning restore 414
 
         [Test]
-        [TestCaseSource(nameof (ParameterParsingCases))]
-        public void ParameterParsing (
+        [TestCaseSource(nameof(ParameterParsingCases))]
+        public void ParameterParsing(
             string parameter, bool valid,
             string expectedProcessor, string expectedDirective,
             string expectedName, string expectedValue)
         {
             string processor, directive, name, value;
-            var success = TemplateGenerator.TryParseParameter (parameter, out processor, out directive, out name, out value);
+            var success = TemplateGenerator.TryParseParameter(parameter, out processor, out directive, out name, out value);
 
-            Assert.AreEqual (valid, success);
-            Assert.AreEqual (expectedProcessor, processor);
-            Assert.AreEqual (expectedDirective, directive);
-            Assert.AreEqual (expectedName, name);
-            Assert.AreEqual (expectedValue, value);
+            Assert.AreEqual(valid, success);
+            Assert.AreEqual(expectedProcessor, processor);
+            Assert.AreEqual(expectedDirective, directive);
+            Assert.AreEqual(expectedName, name);
+            Assert.AreEqual(expectedValue, value);
+        }
+
+#pragma warning disable 414
+        static object[] ParameterExpandCases = {
+            new object [] { "thisIsATest",                  "thisIsATest",                      new string[] { }                                            },
+            new object [] { "thisIs$(Not)ATest",            "thisIs$(Not)ATest",                new string[] { }                                            },
+            new object [] { "thisIs$(NotATest",             "thisIs$(NotATest",                 new string[] { }                                            },
+            new object [] { "this$(T1)Is$(NotATest",        "thisForSureIs$(NotATest",          new string[] { "T1=ForSure" }                               },
+            new object [] { "$(Not)thisIsATest",            "NotAtAllthisIsATest",              new string[] { "Not=NotAtAll" }                             },
+            new object [] { "thisIs$(Not)ATest",            "thisIsNotAtAllATest",              new string[] { "Not=NotAtAll" }                             },
+            new object [] { "thisIsATest$(Not)",            "thisIsATestNotAtAll",              new string[] { "Not=NotAtAll" }                             },
+            new object [] { "this$(T1)IsA$(T2)Test$(T3)",   "thisOneIsAnActualTestInTheEnd",    new string[] { "T1=One", "T2=nActual", "T3=InTheEnd" }      },
+        };
+#pragma warning restore 414
+
+        [Test]
+        [TestCaseSource(nameof(ParameterExpandCases))]
+        public void ParameterExpand(
+            string toExpand, string expected,
+            string[] parametersString)
+        {
+            var parameters = new Dictionary<TemplateGenerator.ParameterKey, string>();
+            string processor, directive, name, value;
+            for (int i = 0; i < parametersString.Length; ++i)
+            {
+                var success = TemplateGenerator.TryParseParameter(parametersString[i], out processor, out directive, out name, out value);
+                Assert.True(success, $"Invalid test parameter input: {parametersString[i]}");
+                parameters.Add(new TemplateGenerator.ParameterKey(processor, directive, name), value);
+            }
+
+            var actual = TemplateGenerator.ExpandParameters(toExpand, parameters);
+            Assert.AreEqual(expected, actual);
         }
     }
 }
