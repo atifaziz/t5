@@ -33,8 +33,8 @@ namespace T5.TextTemplating.Tests
     [TestFixture]
     public class EngineTests
     {
-#pragma warning disable 414
-        static object[] ParameterParsingCases = {
+        #pragma warning disable 414
+        static object [] ParameterParsingCases = {
             new object [] { "foo=bar",             true,  "",     "",    "foo", "bar"     },
             new object [] { "a=b",                 true,  "",     "",    "a",   "b"       },
             new object [] { "a=b=c",               true,  "",     "",    "a",   "b=c"     },
@@ -51,24 +51,23 @@ namespace T5.TextTemplating.Tests
             new object [] { "a!b!c!d!e",           true,  "a",    "b",   "c",   "d!e"     },
             new object [] { "foo!bar!baz!wibb!le", true,  "foo", "bar", "baz",  "wibb!le" },
         };
-#pragma warning restore 414
+        #pragma warning restore 414
 
         [Test]
-        [TestCaseSource(nameof(ParameterParsingCases))]
-        public void ParameterParsing(
+        [TestCaseSource(nameof (ParameterParsingCases))]
+        public void ParameterParsing (
             string parameter, bool valid,
             string expectedProcessor, string expectedDirective,
             string expectedName, string expectedValue)
         {
             string processor, directive, name, value;
-            var success = TemplateGenerator.TryParseParameter(parameter, out processor, out directive, out name, out value);
+            var success = TemplateGenerator.TryParseParameter (parameter, out processor, out directive, out name, out value);
 
-            Assert.AreEqual(valid, success);
-            Assert.AreEqual(expectedProcessor, processor);
-            Assert.AreEqual(expectedDirective, directive);
-            Assert.AreEqual(expectedName, name);
-            Assert.AreEqual(expectedValue, value);
-        }
+            Assert.AreEqual (valid, success);
+            Assert.AreEqual (expectedProcessor, processor);
+            Assert.AreEqual (expectedDirective, directive);
+            Assert.AreEqual (expectedName, name);
+            Assert.AreEqual (expectedValue, value);
 
 #pragma warning disable 414
         static object[] ParameterExpandCases = {
@@ -81,7 +80,7 @@ namespace T5.TextTemplating.Tests
             new object [] { "thisIsATest$(Not)",            "thisIsATestNotAtAll",              new string[] { "Not=NotAtAll" }                             },
             new object [] { "this$(T1)IsA$(T2)Test$(T3)",   "thisOneIsAnActualTestInTheEnd",    new string[] { "T1=One", "T2=nActual", "T3=InTheEnd" }      },
         };
-#pragma warning restore 414
+        #pragma warning restore 414
 
         [Test]
         [TestCaseSource(nameof(ParameterExpandCases))]
