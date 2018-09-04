@@ -51,25 +51,26 @@ namespace T5.TextTemplating.Tests
             new object [] { "a!b!c!d!e",           true,  "a",    "b",   "c",   "d!e"     },
             new object [] { "foo!bar!baz!wibb!le", true,  "foo", "bar", "baz",  "wibb!le" },
         };
-        #pragma warning restore 414
+#pragma warning restore 414
 
         [Test]
-        [TestCaseSource(nameof (ParameterParsingCases))]
-        public void ParameterParsing (
+        [TestCaseSource(nameof(ParameterParsingCases))]
+        public void ParameterParsing(
             string parameter, bool valid,
             string expectedProcessor, string expectedDirective,
             string expectedName, string expectedValue)
         {
             string processor, directive, name, value;
-            var success = TemplateGenerator.TryParseParameter (parameter, out processor, out directive, out name, out value);
+            var success = TemplateGenerator.TryParseParameter(parameter, out processor, out directive, out name, out value);
 
-            Assert.AreEqual (valid, success);
-            Assert.AreEqual (expectedProcessor, processor);
-            Assert.AreEqual (expectedDirective, directive);
-            Assert.AreEqual (expectedName, name);
-            Assert.AreEqual (expectedValue, value);
+            Assert.AreEqual(valid, success);
+            Assert.AreEqual(expectedProcessor, processor);
+            Assert.AreEqual(expectedDirective, directive);
+            Assert.AreEqual(expectedName, name);
+            Assert.AreEqual(expectedValue, value);
+        }
 
-#pragma warning disable 414
+        #pragma warning disable 414
         static object[] ParameterExpandCases = {
             new object [] { "thisIsATest",                  "thisIsATest",                      new string[] { }                                            },
             new object [] { "thisIs$(Not)ATest",            "thisIs$(Not)ATest",                new string[] { }                                            },
