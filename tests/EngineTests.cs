@@ -68,6 +68,7 @@ namespace T5.TextTemplating.Tests
             Assert.AreEqual (expectedDirective, directive);
             Assert.AreEqual (expectedName, name);
             Assert.AreEqual (expectedValue, value);
+        }
 
 #pragma warning disable 414
         static object[] ParameterExpandCases = {
