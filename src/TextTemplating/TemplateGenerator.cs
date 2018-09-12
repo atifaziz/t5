@@ -251,6 +251,7 @@ namespace T5.TextTemplating
 
         protected virtual string ResolvePath (string path)
         {
+            path = ExpandParameters(path, parameters);
             path = Environment.ExpandEnvironmentVariables (path);
             if (Path.IsPathRooted (path))
                 return path;
@@ -338,6 +339,49 @@ namespace T5.TextTemplating
             value = parameter.Substring (end + 1);
 
             return !string.IsNullOrEmpty (name);
+        }
+
+        internal static string ExpandParameters(string value, Dictionary<ParameterKey, string> parameters)
+        {
+            const char TokenStart = '$';
+            const char TokenOpen = '(';
+            const char TokenEnd = ')';
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < value.Length; ++i)
+            {
+                if (i < value.Length - 1 
+                    && value[i] == TokenStart
+                    && value[i + 1] == TokenOpen)
+                {
+                    var endTokenIndex = i;
+                    while (endTokenIndex < value.Length 
+                        && value[endTokenIndex] != TokenEnd)
+                        ++endTokenIndex;
+
+                    if (endTokenIndex >= value.Length 
+                        || value[endTokenIndex] != TokenEnd)
+                    {
+                        // We reached the end of the string
+                        // Probably not a token, or not closed token
+                        sb.Append(value.Substring(i));
+                        break;
+                    }
+
+                    var parameterName = value.Substring(i + 2, endTokenIndex - i - 2);
+                    var key = new ParameterKey(string.Empty, string.Empty, parameterName);
+                    if (parameters.TryGetValue(key, out string parameterValue))
+                    {
+                        sb.Append(parameterValue);
+                    }
+                    else
+                        sb.Append(value.Substring(i, endTokenIndex - i + 1));
+                    i = endTokenIndex;
+                }
+                else
+                    sb.Append(value[i]);
+            }
+            return sb.ToString();
         }
 
         protected virtual bool LoadIncludeText (string requestFileName, out string content, out string location)
@@ -428,7 +472,7 @@ namespace T5.TextTemplating
 
         #endregion
 
-        struct ParameterKey : IEquatable<ParameterKey>
+        internal struct ParameterKey : IEquatable<ParameterKey>
         {
             public ParameterKey (string processorName, string directiveName, string parameterName)
             {
