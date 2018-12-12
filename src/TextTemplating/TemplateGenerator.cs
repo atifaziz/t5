@@ -287,6 +287,7 @@ namespace T5.TextTemplating
             string processor, directive, name, value;
             if (TryParseParameter (unparsedParameter, out processor, out directive, out name, out value)) {
                 AddParameter (processor, directive, name, value);
+                CallContext.LogicalSetData(name, value);
                 return true;
             }
             return false;

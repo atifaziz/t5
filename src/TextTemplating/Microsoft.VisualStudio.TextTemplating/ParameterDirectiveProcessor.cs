@@ -131,7 +131,7 @@ namespace Microsoft.VisualStudio.TextTemplating
             var valRef = new CodeVariableReferenceExpression ("data");
             var namePrimitive = new CodePrimitiveExpression (name);
             var sessionRef = new CodePropertyReferenceExpression (thisRef, "Session");
-            var callContextTypeRefExpr = new CodeTypeReferenceExpression ("System.Runtime.Remoting.Messaging.CallContext");
+            var callContextTypeRefExpr = new CodeTypeReferenceExpression ("T5.TextTemplating.CallContext");
             var nullPrim = new CodePrimitiveExpression (null);
 
             var acquiredVariable = new CodeVariableDeclarationStatement (typeof (bool), acquiredName, new CodePrimitiveExpression (false));
